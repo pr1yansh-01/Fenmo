@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import ExpenseForm from './components/ExpenseForm';
 import ExpenseFilters from './components/ExpenseFilters';
 import ExpenseTable from './components/ExpenseTable';
+import ExpenseTotal from './components/ExpenseTotal';
 import { fetchExpenses } from './api/expenses';
 
 function App() {
@@ -47,9 +48,14 @@ function App() {
       <h1>Expense Tracker</h1>
       <ExpenseForm onSuccess={loadExpenses} />
       <ExpenseFilters onFilterChange={handleFilterChange} />
-      {loading && <p>Loading...</p>}
-      {error && <p style={{ color: 'red' }}>{error}</p>}
-      {!loading && !error && <ExpenseTable expenses={expenses} />}
+      {loading && <div className="card loading">Loading expenses...</div>}
+      {error && <div className="error-message">{error}</div>}
+      {!loading && !error && (
+        <>
+          <ExpenseTotal expenses={expenses} />
+          <ExpenseTable expenses={expenses} />
+        </>
+      )}
     </div>
   );
 }
