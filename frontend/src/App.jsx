@@ -34,9 +34,10 @@ function App() {
   };
 
   useEffect(() => {
+    const initialFilters = { category: '', sort: 'newest' };
     fetchExpenses({
-        category: filters.category || undefined,
-        sort: filters.sort || undefined
+        category: initialFilters.category || undefined,
+        sort: initialFilters.sort || undefined
       })
       .then(setExpenses)
       .catch((err) => setError(err.response?.data?.error || 'Failed to load expenses'))
