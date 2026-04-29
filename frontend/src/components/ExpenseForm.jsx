@@ -2,7 +2,9 @@ import { useState } from 'react';
 
 const CATEGORIES = ['Food', 'Transport', 'Entertainment', 'Shopping', 'Bills', 'Health', 'Other'];
 
-function ExpenseForm({ onSubmit, isSubmitting }) {
+function ExpenseForm({ onSuccess }) {
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState('');
   const [formData, setFormData] = useState({
     amount: '',
     category: '',
@@ -13,16 +15,36 @@ function ExpenseForm({ onSubmit, isSubmitting }) {
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
+    setError('');
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    onSubmit(formData);
-    setFormData({ amount: '', category: '', description: '', date: '' });
+
+    if (!formData.amount || !formData.category || !formData.date) {
+      setError('Please fill in all required fields');
+      return;
+    }
+
+    setIsSubmitting(true);
+    setError('');
+
+    try {
+      const { createExpense } = await import('../api/expenses');
+      await createExpense(formData);
+      setFormData({ amount: '', category: '', description: '', date: '' });
+      if (onSuccess) onSuccess();
+    } catch (err) {
+      setError(err.response?.data?.error || 'Failed to add expense');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
     <form onSubmit={handleSubmit} style={styles.form}>
+      {error && <div style={styles.error}>{error}</div>}
+
       <div style={styles.row}>
         <div style={styles.field}>
           <label style={styles.label}>Amount</label>
@@ -36,6 +58,7 @@ function ExpenseForm({ onSubmit, isSubmitting }) {
             required
             style={styles.input}
             placeholder="0.00"
+            disabled={isSubmitting}
           />
         </div>
 
@@ -47,6 +70,7 @@ function ExpenseForm({ onSubmit, isSubmitting }) {
             onChange={handleChange}
             required
             style={styles.select}
+            disabled={isSubmitting}
           >
             <option value="">Select category</option>
             {CATEGORIES.map(cat => (
@@ -65,6 +89,7 @@ function ExpenseForm({ onSubmit, isSubmitting }) {
           onChange={handleChange}
           style={styles.input}
           placeholder="Optional description"
+          disabled={isSubmitting}
         />
       </div>
 
@@ -77,6 +102,7 @@ function ExpenseForm({ onSubmit, isSubmitting }) {
           onChange={handleChange}
           required
           style={styles.input}
+          disabled={isSubmitting}
         />
       </div>
 
@@ -133,7 +159,15 @@ const styles = {
     borderRadius: '6px',
     fontSize: '16px',
     cursor: 'pointer',
-    fontWeight: '500'
+    fontWeight: '500',
+    opacity: 1
+  },
+  error: {
+    padding: '10px',
+    backgroundColor: '#fee2e2',
+    color: '#dc2626',
+    borderRadius: '6px',
+    fontSize: '14px'
   }
 };
 
