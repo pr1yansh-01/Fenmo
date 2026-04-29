@@ -1,1 +1,5 @@
-﻿*node_modules*\n*dist*\n*.log\n.env\n.DS_Store\n
+﻿node_modules/
+dist/
+*.log
+.env
+.DS_Store
