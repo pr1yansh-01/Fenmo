@@ -1,5 +1,5 @@
 const { validateCreateExpense } = require('../validators/expense.validator');
-const { createExpense, getExpenses } = require('../services/expense.service');
+const { createExpense, getExpenses, getCategorySummary } = require('../services/expense.service');
 
 async function createExpenseController(req, res) {
   try {
@@ -35,7 +35,19 @@ async function getExpensesController(req, res) {
   }
 }
 
+async function getCategorySummaryController(req, res) {
+  try {
+    const summary = await getCategorySummary();
+
+    return res.status(200).json(summary);
+  } catch (error) {
+    console.error('Get category summary error:', error);
+    return res.status(500).json({ error: 'Internal server error' });
+  }
+}
+
 module.exports = {
   createExpenseController,
-  getExpensesController
+  getExpensesController,
+  getCategorySummaryController
 };

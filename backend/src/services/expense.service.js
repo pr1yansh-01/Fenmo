@@ -47,10 +47,25 @@ async function getExpenses(query) {
     orderBy
   });
 
-  return expenses.map(formatExpense);
+return expenses.map(formatExpense);
+}
+
+async function getCategorySummary() {
+  const summary = await prisma.expense.groupBy({
+    by: ['category'],
+    _sum: {
+      amountPaise: true
+    }
+  });
+
+  return summary.map(item => ({
+    category: item.category,
+    total: item._sum.amountPaise || 0
+  }));
 }
 
 module.exports = {
   createExpense,
-  getExpenses
+  getExpenses,
+  getCategorySummary
 };
