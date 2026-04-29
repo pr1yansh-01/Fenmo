@@ -10,10 +10,14 @@ function ExpenseTable({ expenses = [] }) {
   };
 
   const formatAmount = (amount) => {
-    return new Intl.NumberFormat('en-US', {
+    const numericAmount = typeof amount === 'string'
+      ? Number.parseFloat(amount)
+      : amount;
+
+    return new Intl.NumberFormat('en-IN', {
       style: 'currency',
-      currency: 'USD'
-    }).format(amount);
+      currency: 'INR'
+    }).format(Number.isFinite(numericAmount) ? numericAmount : 0);
   };
 
   if (!expenses || expenses.length === 0) {

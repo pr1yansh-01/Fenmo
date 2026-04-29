@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { createExpense } from '../api/expenses';
 
 const CATEGORIES = ['Food', 'Transport', 'Entertainment', 'Shopping', 'Bills', 'Health', 'Other'];
 
@@ -30,7 +31,6 @@ function ExpenseForm({ onSuccess }) {
     setError('');
 
     try {
-      const { createExpense } = await import('../api/expenses');
       await createExpense(formData);
       setFormData({ amount: '', category: '', description: '', date: '' });
       if (onSuccess) onSuccess();

@@ -1,9 +1,5 @@
 import { useState, useEffect } from 'react';
-import axios from 'axios';
-
-const api = axios.create({
-  baseURL: import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000/api'
-});
+import { api } from '../api/expenses';
 
 function CategorySummary() {
   const [summary, setSummary] = useState([]);
@@ -19,9 +15,9 @@ function CategorySummary() {
   }, []);
 
   const formatAmount = (paise) => {
-    return new Intl.NumberFormat('en-US', {
+    return new Intl.NumberFormat('en-IN', {
       style: 'currency',
-      currency: 'USD'
+      currency: 'INR'
     }).format(paise / 100);
   };
 

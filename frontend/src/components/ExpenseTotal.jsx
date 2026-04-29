@@ -1,15 +1,16 @@
 function ExpenseTotal({ expenses = [] }) {
-  const totalPaise = expenses.reduce((sum, expense) => {
-    const amount = expense.amountPaise ? expense.amountPaise / 100 : expense.amount;
-    return sum + (amount || 0);
-  }, 0);
+  const totalRupees = expenses.reduce((sum, expense) => {
+    const amount = typeof expense.amount === 'string'
+      ? Number.parseFloat(expense.amount)
+      : expense.amount;
 
-  const totalRupees = (totalPaise / 100).toFixed(2);
+    return sum + (Number.isFinite(amount) ? amount : 0);
+  }, 0);
 
   return (
     <div className="card total">
       <span>Total:</span>
-      <span>₹{totalRupees}</span>
+      <span>{`Rs. ${totalRupees.toFixed(2)}`}</span>
     </div>
   );
 }

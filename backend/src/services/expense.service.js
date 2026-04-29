@@ -35,12 +35,9 @@ async function getExpenses(query) {
     where.category = category;
   }
 
-  const orderBy = {};
-  if (sort === 'date_desc') {
-    orderBy.date = 'desc';
-  } else {
-    orderBy.createdAt = 'desc';
-  }
+  const orderBy = sort === 'oldest' || sort === 'date_asc'
+    ? { date: 'asc' }
+    : { date: 'desc' };
 
   const expenses = await prisma.expense.findMany({
     where,

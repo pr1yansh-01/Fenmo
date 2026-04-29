@@ -1,7 +1,20 @@
 import axios from 'axios';
 
-const api = axios.create({
-  baseURL: import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000/api'
+function getApiBaseUrl() {
+  const configuredBaseUrl = import.meta.env.VITE_API_BASE_URL?.trim();
+  if (configuredBaseUrl) {
+    return configuredBaseUrl;
+  }
+
+  if (typeof window !== 'undefined' && window.location.hostname !== 'localhost') {
+    return '/api';
+  }
+
+  return 'http://localhost:5000/api';
+}
+
+export const api = axios.create({
+  baseURL: getApiBaseUrl()
 });
 
 export async function fetchExpenses({ category, sort } = {}) {
