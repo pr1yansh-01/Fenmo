@@ -27,6 +27,30 @@ async function createExpense(data, idempotencyKey) {
   return formatExpense(expense);
 }
 
+async function getExpenses(query) {
+  const { category, sort } = query;
+
+  const where = {};
+  if (category) {
+    where.category = category;
+  }
+
+  const orderBy = {};
+  if (sort === 'date_desc') {
+    orderBy.date = 'desc';
+  } else {
+    orderBy.createdAt = 'desc';
+  }
+
+  const expenses = await prisma.expense.findMany({
+    where,
+    orderBy
+  });
+
+  return expenses.map(formatExpense);
+}
+
 module.exports = {
-  createExpense
+  createExpense,
+  getExpenses
 };
