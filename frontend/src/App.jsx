@@ -3,6 +3,7 @@ import ExpenseForm from './components/ExpenseForm';
 import ExpenseFilters from './components/ExpenseFilters';
 import ExpenseTable from './components/ExpenseTable';
 import ExpenseTotal from './components/ExpenseTotal';
+import CategorySummary from './components/CategorySummary';
 import { fetchExpenses } from './api/expenses';
 
 function App() {
@@ -51,6 +52,7 @@ function App() {
       <ExpenseFilters onFilterChange={handleFilterChange} />
       {loading && <div className="card loading">Loading expenses...</div>}
       {error && <div className="error-message">{error}</div>}
+      <CategorySummary />
       {!loading && !error && (
         <>
           <ExpenseTotal expenses={expenses} />
