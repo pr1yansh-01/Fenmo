@@ -2,6 +2,8 @@ const express = require('express');
 const cors = require('cors');
 require('dotenv').config();
 
+const expenseRoutes = require('./routes/expense.routes');
+
 const app = express();
 
 const allowedOrigins = [
@@ -14,6 +16,8 @@ app.use(cors({
   credentials: true
 }));
 app.use(express.json());
+
+app.use('/api', expenseRoutes);
 
 app.get('/health', (req, res) => {
   res.json({ status: 'ok' });
